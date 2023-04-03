@@ -3,13 +3,11 @@
 #include <filesystem>
 #include <vector>
 namespace fs = std::filesystem;
-/*
-I got really annoyed sorting my desktop every few months, so I wrote a program that does it for me. 
-Kinda. It actually just makes it easier for me to sort stuff when I actually get around to it
-*/
 
+// What is added after the folder name to designate it as this programs SORTING folder
 #define FILE_POST "_AUTOFILESORT"
 
+// Returns type of file given it's path, if its a folder, it returns the string "FOLDER"
 std::string GetType(std::string path)
 {
     if(fs::path(path).has_extension())
@@ -19,7 +17,7 @@ std::string GetType(std::string path)
 
 int main()
 {
-    //"C:\Users\okay5\OneDrive\Desktop\eng_notes_FINAL IDK.txt"
+    // replace the path folder with whatever directory you want to sort
     std::string path = "C:\\Users\\okay5\\OneDrive\\Desktop\\";
     int path_length = path.length();
     std::vector<std::string> extensions;
@@ -32,18 +30,18 @@ int main()
         std::string file = p.substr(path_length);
         std::string ext = path.extension().string();
 
-        // dont include it if its already part of autosort
+        // Dont include the file if its already part of autosort
         if (file.find(FILE_POST) != std::string::npos)
             continue;
 
-        // NEW EXTENSION/TYPE, ADD IT!
+        // New extenstion/type, add it!
         if (path.has_extension() && std::find(extensions.begin(), extensions.end(), ext) == extensions.end())
             extensions.push_back(path.extension().string());
         if (!path.has_extension() && std::find(extensions.begin(), extensions.end(), "FOLDER") == extensions.end())
             extensions.push_back("FOLDER");
     }
-    // alr, now we have a list of files, and extensions, lets see if we have run this program before, if so, lets sort CAREFULLY,
-    // otherwise, just bruteforce sort as usual
+    // alr, now we have a list of files, and extensions, lets sort CAREFULLY,
+    // otherwise, just sort as usual
 
     // SORT IT OUT
     for (auto& a : extensions)
@@ -61,9 +59,9 @@ int main()
             {
                 std::string from = f;
                 std::string to = folder + "\\" + f.substr(path_length);
-                fs::rename(from, to);
+                fs::rename(from, to);   // by renaming we move the file to the correct spot
             }
         }
     }
-
+    return 0;
 }
